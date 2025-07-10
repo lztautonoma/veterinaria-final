@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del Doctor - Patita's.</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home">
+  <div class="overlay">
+    <header class="top-bar">
+      <div class="logo">🐾</div>
+      <div class="company-name">Patita's.</div>
+      <div class="top-links">
+        <button class="btn" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <main class="hero">
+      <h1 class="slogan">Bienvenido Dr. <span id="nombre-doc"></span></h1>
+
+      <div class="section" id="citas">
+        <h2>Citas asignadas</h2>
+        <div style="margin-bottom: 15px;">
+          <button onclick="mostrarPendientes()">🔄 Ver pendientes</button>
+          <button onclick="mostrarAtendidas()">✅ Ver atendidas</button>
+        </div>
+
+        <table id="tabla-citas">
+          <thead>
+            <tr>
+              <th>Mascota</th>
+              <th>Motivo</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Dueño</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-citas"></tbody>
+        </table>
+      </div>
+
+      <div id="detalle-cita" style="display:none;">
+        <h3>Detalle de la Cita</h3>
+        <p><strong>Mascota:</strong> <span id="detalle-mascota"></span></p>
+        <p><strong>Fecha:</strong> <span id="detalle-fecha"></span></p>
+        <p><strong>Hora:</strong> <span id="detalle-hora"></span></p>
+        <p><strong>Motivo:</strong> <span id="detalle-motivo"></span></p>
+
+        <label><strong>Diagnóstico:</strong></label>
+        <textarea id="input-diagnostico" rows="2" style="width:100%;"></textarea>
+
+        <label><strong>Tratamiento:</strong></label>
+        <textarea id="input-tratamiento" rows="2" style="width:100%;"></textarea>
+
+        <p><strong>Dueño:</strong> <span id="detalle-dueno"></span></p>
+
+        <button id="btn-guardar" style="margin-top:10px;">💾 Guardar cambios</button>
+        <button id="btn-atendida" style="margin-top:10px;">✅ Marcar como atendida</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const idVeterinario = localStorage.getItem('idVeterinario');
+    const nombreDoctor = localStorage.getItem('nombreDoctor');
+    document.getElementById('nombre-doc').textContent = nombreDoctor || '';
+
+    if (!idVeterinario || !nombreDoctor) {
+      alert('Debes iniciar sesión como doctor');
+      window.location.href = 'login-doctor.html';
+    }
+
+    function logout() {
+      localStorage.removeItem('idVeterinario');
+      localStorage.removeItem('nombreDoctor');
+      window.location.href = 'login-doctor.html';
+    }
+
+    let citasTodas = [];
+
+    async function cargarCitas() {
+      try {
+        const res = await fetch(`http://localhost:3000/api/citas-doctor/${idVeterinario}`);
+        citasTodas = await res.json();
+        mostrarPendientes(); // mostrar por defecto
+      } catch (error) {
+        console.error('Error al cargar citas:', error);
+      }
+    }
+
+    function mostrarPendientes() {
+      const tbody = document.getElementById('tbody-citas');
+      tbody.innerHTML = '';
+
+      const pendientes = citasTodas.filter(c => !c.Atendida);
+
+      if (pendientes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">No hay citas pendientes.</td></tr>';
+        return;
+      }
+
+      pendientes.forEach(cita => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${cita.NombreMascota}</td>
+          <td>${cita.Motivo}</td>
+          <td>${cita.Fecha}</td>
+          <td>${cita.Hora}</td>
+          <td>${cita.DuenoNombre} ${cita.DuenoApellido}</td>
+          <td><button class="btn-ver" onclick="verDetalleCita(${cita.ID_Cita})">👁 Ver</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function mostrarAtendidas() {
+      const tbody = document.getElementById('tbody-citas');
+      tbody.innerHTML = '';
+
+      const atendidas = citasTodas.filter(c => c.Atendida);
+
+      if (atendidas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">No hay citas atendidas.</td></tr>';
+        return;
+      }
+
+      atendidas.forEach(cita => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${cita.NombreMascota}</td>
+          <td>${cita.Motivo}</td>
+          <td>${cita.Fecha}</td>
+          <td>${cita.Hora}</td>
+          <td>${cita.DuenoNombre} ${cita.DuenoApellido}</td>
+          <td><span style="color: green;">✅ Atendida</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function verDetalleCita(idCita) {
+      try {
+        const res = await fetch(`http://localhost:3000/api/cita/${idCita}`);
+        const cita = await res.json();
+
+        document.getElementById('detalle-mascota').textContent = cita.NombreMascota;
+        document.getElementById('detalle-fecha').textContent = cita.Fecha;
+        document.getElementById('detalle-hora').textContent = cita.Hora;
+        document.getElementById('detalle-motivo').textContent = cita.Motivo;
+        document.getElementById('detalle-dueno').textContent = `${cita.DuenoNombre} ${cita.DuenoApellido}`;
+
+        document.getElementById('input-diagnostico').value = cita.Diagnostico;
+        document.getElementById('input-tratamiento').value = cita.Tratamiento;
+
+        const guardarBtn = document.getElementById('btn-guardar');
+        guardarBtn.onclick = () => guardarCambiosCita(idCita);
+
+        const btnAtendida = document.getElementById('btn-atendida');
+        btnAtendida.style.display = cita.Atendida ? 'none' : 'inline-block';
+        btnAtendida.onclick = () => marcarAtendida(idCita);
+
+        document.getElementById('detalle-cita').style.display = 'block';
+      } catch (error) {
+        console.error('Error al cargar detalle de la cita:', error);
+      }
+    }
+
+    async function guardarCambiosCita(idCita) {
+      const diagnostico = document.getElementById('input-diagnostico').value.trim();
+      const tratamiento = document.getElementById('input-tratamiento').value.trim();
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/cita/${idCita}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ diagnostico, tratamiento })
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || 'Cambios guardados');
+        cargarCitas();
+        document.getElementById('detalle-cita').style.display = 'none';
+      } catch (error) {
+        console.error('Error al guardar cambios:', error);
+      }
+    }
+
+    async function marcarAtendida(idCita) {
+      try {
+        const res = await fetch(`http://localhost:3000/api/cita/${idCita}/atendida`, {
+          method: 'PUT'
+        });
+        const data = await res.json();
+        alert(data.mensaje);
+        document.getElementById('detalle-cita').style.display = 'none';
+        cargarCitas();
+      } catch (error) {
+        console.error('Error al marcar como atendida:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarCitas);
+  </script>
+</body>
+</html>

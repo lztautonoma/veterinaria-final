@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Cliente - Patita's.</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="home">
+  <div class="overlay">
+    <header class="top-bar">
+      <div class="logo">🐾</div>
+      <div class="company-name">Patita's.</div>
+      <div class="top-links">
+        <a href="register-cliente.html" class="btn">Regístrate</a>
+        <a href="index.html" class="btn">Volver al inicio</a>
+      </div>
+    </header>
+
+    <main class="hero">
+      <div class="login-container">
+        <h2>Inicio de Sesión - Cliente</h2>
+        <form id="login-form">
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" required />
+
+          <label for="contrasena">Contraseña</label>
+          <input type="password" id="contrasena" name="contrasena" required />
+
+          <button type="submit">Ingresar</button>
+
+          <div class="extra-options">
+            <a href="register-cliente.html">¿No tienes cuenta? Regístrate</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Script de login -->
+  <script>
+    const form = document.getElementById('login-form');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        correo: form.correo.value.trim(),
+        contrasena: form.contrasena.value,
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // ✅ Guarda datos en localStorage
+          localStorage.setItem('logueado', 'true');
+          localStorage.setItem('nombreUsuario', result.mensaje.replace('Bienvenido, ', ''));
+          localStorage.setItem('idDueno', result.idDueno);
+
+          // ✅ Redirige al dashboard o a la página que desees
+          window.location.href = 'dashboard.html';
+        } else {
+          alert(result.error || 'Credenciales incorrectas');
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor');
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>

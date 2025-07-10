@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mi Perfil - Patita's.</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet" />
+</head>
+<body class="home">
+  <div class="overlay">
+    <header class="top-bar">
+      <div class="logo">🐾</div>
+      <div class="company-name">Patita's.</div>
+      <div class="top-links">
+        <a href="dashboard.html" class="btn">Volver al panel</a>
+        <a href="editar-perfil.html" class="btn">Editar perfil</a>
+      </div>
+    </header>
+
+    <main class="hero">
+      <h1 class="slogan">Mi Perfil</h1>
+
+      <div class="servicios" id="datos-perfil"></div>
+
+      <h2 class="slogan" style="font-size: 28px;">🐶 Mis Mascotas</h2>
+      <div class="servicios" id="mascotas-perfil"></div>
+
+      <h2 class="slogan" style="font-size: 28px;">📅 Mis Citas</h2>
+      <div class="servicios" id="citas-perfil"></div>
+    </main>
+  </div>
+
+  <div class="fondo-oscuro"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const idDueno = localStorage.getItem('idDueno');
+    if (!idDueno) {
+      alert('Debes iniciar sesión para ver tu perfil.');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    // Obtener datos del dueño
+    try {
+      const resPerfil = await fetch(`http://localhost:3000/api/dueno/${idDueno}`);
+      const perfil = await resPerfil.json();
+
+      const contenedorPerfil = document.getElementById('datos-perfil');
+      contenedorPerfil.innerHTML = `
+        <div class="perfil-card">
+          <p><strong>Nombre:</strong> ${perfil.Nombres} ${perfil.Apellidos}</p>
+          <p><strong>DNI:</strong> ${perfil.DNI}</p>
+          <p><strong>Dirección:</strong> ${perfil.Direccion}</p>
+          <p><strong>Teléfono:</strong> ${perfil.Telefono}</p>
+          <p><strong>Correo:</strong> ${perfil.Correo}</p>
+        </div>
+      `;
+    } catch (error) {
+      console.error('Error al cargar datos del perfil:', error);
+    }
+
+    // Obtener mascotas
+    try {
+      const resMascotas = await fetch(`http://localhost:3000/api/mis-mascotas/${idDueno}`);
+      const mascotas = await resMascotas.json();
+      const contenedorMascotas = document.getElementById('mascotas-perfil');
+      contenedorMascotas.innerHTML = mascotas.length === 0 ? '<p>No tienes mascotas registradas.</p>' : '';
+
+      mascotas.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'mascota-card';
+        div.innerHTML = `
+          <h3>${m.Nombre}</h3>
+          <p><strong>Especie:</strong> ${m.Especie}</p>
+          <p><strong>Raza:</strong> ${m.Raza}</p>
+          <p><strong>Edad:</strong> ${m.Edad}</p>
+          <p><strong>Sexo:</strong> ${m.Sexo}</p>
+        `;
+        contenedorMascotas.appendChild(div);
+      });
+    } catch (error) {
+      console.error('Error al cargar mascotas:', error);
+    }
+
+    // Obtener citas
+    try {
+      const resCitas = await fetch(`http://localhost:3000/api/citas-dueno/${idDueno}`);
+      const citas = await resCitas.json();
+      const contenedorCitas = document.getElementById('citas-perfil');
+      contenedorCitas.innerHTML = citas.length === 0 ? '<p>No tienes citas registradas.</p>' : '';
+
+      citas.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'cita-card';
+        div.innerHTML = `
+          <h3>${c.NombreMascota}</h3>
+          <p><strong>Fecha:</strong> ${c.Fecha}</p>
+          <p><strong>Hora:</strong> ${c.Hora}</p>
+          <p><strong>Motivo:</strong> ${c.Motivo}</p>
+          <p><strong>Veterinario:</strong> ${c.NombreVeterinario} ${c.ApellidoVeterinario}</p>
+        `;
+        contenedorCitas.appendChild(div);
+      });
+    } catch (error) {
+      console.error('Error al cargar citas:', error);
+    }
+  });
+</script>
+
+</body>
+</html>

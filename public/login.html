@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Selecciona tu rol - Patita's.</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="home">
+  <div class="overlay">
+    <header class="top-bar">
+      <div class="logo">🐾</div>
+      <div class="company-name">Patita's.</div>
+    </header>
+
+    <main class="hero">
+      <h1 class="slogan">¿Qué tipo de usuario eres?</h1>
+      <div class="role-selection">
+        <a href="login-doctor.html" class="big-btn">Doctor</a>
+        <a href="login-cliente.html" class="big-btn">Cliente</a>
+      </div>
+    </main>
+  </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('form-login');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const correo = document.getElementById('correo').value;
+      const contrasena = document.getElementById('contrasena').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ correo, contrasena }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Guardar nombre en localStorage
+          localStorage.setItem('logueado', 'true');
+          localStorage.setItem('nombreUsuario', data.nombres);
+          // Redirigir
+          window.location.href = 'inicio.html';
+        } else {
+          alert(data.error || 'Error al iniciar sesión');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error de conexión con el servidor');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+/* ===== Fondo con imagen ===== */
+body.home {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('images/fondo-patas.avif') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  position: relative;
+  color: white;
+}
+
+/* ===== Capa semitransparente para oscurecer solo el fondo ===== */
+.overlay::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Ajusta el valor para más o menos oscuridad */
+  z-index: -1;
+}
+
+/* ===== Todo el contenido se sitúa encima de la capa ===== */
+.overlay {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Barra superior ===== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 28px;
+  background-color: white;
+  color: brown;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.company-name {
+  font-size: 22px;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #fff;
+}
+
+.top-links {
+  display: flex;
+  gap: 15px;
+}
+
+/* ===== Botón estándar ===== */
+.btn {
+  background-color: #ffb347;
+  color: #000;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #ffa31a;
+}
+
+/* ===== Sección Hero / Eslogan ===== */
+.hero {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.slogan {
+  font-family: 'Poppins', sans-serif;
+  font-size: 36px;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+/* ===== Sección de Servicios ===== */
+.servicios {
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* ===== Botones grandes centrados para la selección de rol ===== */
+.role-selection {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.big-btn {
+  font-size: 20px;
+  padding: 15px 40px;
+  background-color: #ffb347;
+  color: black;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.big-btn:hover {
+  background-color: #ffa31a;
+}
+
+/* ===== Responsive para pantallas pequeñas ===== */
+@media screen and (max-width: 768px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .logo {
+    font-size: 24px;
+    padding: 8px;
+  }
+  
+  .company-name {
+    font-size: 20px;
+  }
+  
+  .top-links {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .btn, .big-btn {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  .hero {
+    margin-top: 40px;
+  }
+  
+  .slogan {
+    font-size: 24px;
+    padding: 0 10px;
+  }
+  
+  .servicios {
+    font-size: 16px;
+    line-height: 1.4;
+    padding: 15px;
+    margin: 20px;
+  }
+}
+.btn-admin {
+  background-color: white;
+  color: black;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-admin:hover {
+  background-color: #eee;
+}
+
+.btn-cancelar {
+  background-color: #e74c3c;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-cancelar:hover {
+  background-color: #c0392b;
+}
+
+.doctor-menu {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .doctor-menu button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      background-color: #ffb347;
+      cursor: pointer;
+    }
+    .doctor-menu button:hover {
+      background-color: #ffa31a;
+    }
+    .section {
+      margin-top: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      background-color: rgba(255,255,255,0.1);
+    }
+    th {
+      background-color: #ffb347;
+    }
+    #detalle-cita {
+      display: none;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+    #detalle-cita p {
+      margin: 6px 0;
+    }
+    .btn-ver, #btn-atendida {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-ver {
+      background-color: #3498db;
+      color: white;
+    }
+    .btn-ver:hover {
+      background-color: #2980b9;
+    }
+    #btn-atendida {
+      background-color: #27ae60;
+      color: white;
+      margin-top: 10px;
+    }
+    #btn-atendida:hover {
+      background-color: #219150;
+    }

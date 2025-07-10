@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editar Perfil - Patita's.</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet" />
+</head>
+<body class="home">
+  <div class="overlay">
+    <header class="top-bar">
+      <div class="logo">🐾</div>
+      <div class="company-name">Patita's.</div>
+      <div class="top-links">
+        <a href="perfil.html" class="btn">Volver</a>
+        <a href="inicio.html" class="btn">Inicio</a>
+      </div>
+    </header>
+
+    <main class="hero">
+      <div class="login-container">
+        <h2>Editar Perfil</h2>
+        <form id="editar-form">
+          <label for="nombres">Nombres</label>
+          <input type="text" id="nombres" required />
+
+          <label for="apellidos">Apellidos</label>
+          <input type="text" id="apellidos" required />
+
+          <label for="dni">DNI</label>
+          <input type="text" id="dni" required />
+
+          <label for="direccion">Dirección</label>
+          <input type="text" id="direccion" required />
+
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" required />
+
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" required />
+
+          <label for="password">Nueva contraseña</label>
+          <input type="password" id="password" required />
+
+          <button type="submit" class="btn">Guardar cambios</button>
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="fondo-oscuro"></div>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const idDueno = localStorage.getItem('idDueno');
+    if (!idDueno) {
+      alert('Debes iniciar sesión.');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    // Cargar datos actuales
+    try {
+      const res = await fetch(`http://localhost:3000/api/dueno/${idDueno}`);
+      const data = await res.json();
+
+      document.getElementById('nombres').value = data.Nombres;
+      document.getElementById('apellidos').value = data.Apellidos;
+      document.getElementById('dni').value = data.DNI;
+      document.getElementById('direccion').value = data.Direccion;
+      document.getElementById('telefono').value = data.Telefono;
+      document.getElementById('correo').value = data.Correo;
+    } catch (error) {
+      console.error('Error al cargar perfil:', error);
+    }
+
+    // Guardar cambios
+    document.getElementById('editar-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const updatedData = {
+        nombres: document.getElementById('nombres').value,
+        apellidos: document.getElementById('apellidos').value,
+        dni: document.getElementById('dni').value,
+        direccion: document.getElementById('direccion').value,
+        telefono: document.getElementById('telefono').value,
+        correo: document.getElementById('correo').value,
+        contrasena: document.getElementById('password').value
+      };
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/dueno/${idDueno}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedData)
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          alert('Perfil actualizado correctamente.');
+          window.location.href = 'perfil.html';
+        } else {
+          alert(result.error || 'Error al actualizar el perfil');
+        }
+      } catch (error) {
+        console.error('Error al guardar cambios:', error);
+      }
+    });
+  });
+</script>
+
+
+</body>
+</html>

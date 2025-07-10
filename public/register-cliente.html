@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro Cliente - Patita's.</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="home">
+  <div class="overlay">
+    <header class="top-bar">
+      <div class="logo" aria-label="Logo Patita's">🐾</div>
+      <div class="company-name">Patita's.</div>
+      <nav class="top-links" role="navigation" aria-label="Navegación principal">
+        <a href="login.html" class="btn">Cambiar de usuario</a>
+        <a href="inicio.html" class="btn">Volver al inicio</a>
+      </nav>
+    </header>
+
+    <main class="hero">
+      <div class="login-container">
+        <h2>Registro de Cliente</h2>
+        <form id="registro-form">
+          <label for="nombres">Nombres</label>
+          <input type="text" id="nombres" name="nombres" required placeholder="Tus nombres" />
+
+          <label for="apellidos">Apellidos</label>
+          <input type="text" id="apellidos" name="apellidos" required placeholder="Tus apellidos" />
+
+          <label for="dni">DNI</label>
+          <input type="text" id="dni" name="dni" required placeholder="Tu DNI" />
+
+          <label for="direccion">Dirección</label>
+          <input type="text" id="direccion" name="direccion" required placeholder="Tu dirección" />
+
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" required placeholder="Tu teléfono" pattern="[0-9]{7,15}" title="Sólo números, 7-15 dígitos" />
+
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" required placeholder="ejemplo@correo.com" />
+
+          <label for="contrasena">Contraseña</label>
+          <input type="password" id="contrasena" name="contrasena" required placeholder="Mínimo 6 caracteres" minlength="6" />
+
+          <button type="submit">Registrarse</button>
+
+          <div class="extra-options">
+            <a href="login.html">¿Ya tienes cuenta? Inicia sesión</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const form = document.getElementById('registro-form');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        nombres: form.nombres.value.trim(),
+        apellidos: form.apellidos.value.trim(),
+        dni: form.dni.value.trim(),
+        direccion: form.direccion.value.trim(),
+        telefono: form.telefono.value.trim(),
+        correo: form.correo.value.trim(),
+        contrasena: form.contrasena.value,
+      };
+
+      try {
+        const res = await fetch('http://localhost:3000/api/registro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          alert(result.mensaje);
+          window.location.href = 'login.html';
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        alert('Error al conectar con el servidor');
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
