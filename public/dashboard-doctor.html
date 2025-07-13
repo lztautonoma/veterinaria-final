@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel del Doctor - Patita's.</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Resalta los campos vacíos en rojo */
+    .campo-vacio {
+      border: 2px solid red;
+      background-color: #ffe5e5;
+    }
+  </style>
 </head>
 <body class="home">
   <div class="overlay">
@@ -189,6 +196,33 @@
     }
 
     async function marcarAtendida(idCita) {
+      const diagnosticoInput = document.getElementById('input-diagnostico');
+      const tratamientoInput = document.getElementById('input-tratamiento');
+
+      const diagnostico = diagnosticoInput.value.trim();
+      const tratamiento = tratamientoInput.value.trim();
+
+      // Quitar resaltado previo
+      diagnosticoInput.classList.remove('campo-vacio');
+      tratamientoInput.classList.remove('campo-vacio');
+
+      // Validación
+      let camposVacios = false;
+
+      if (diagnostico === '') {
+        diagnosticoInput.classList.add('campo-vacio');
+        camposVacios = true;
+      }
+      if (tratamiento === '') {
+        tratamientoInput.classList.add('campo-vacio');
+        camposVacios = true;
+      }
+
+      if (camposVacios) {
+        alert('❌ Debes llenar el Diagnóstico y el Tratamiento antes de marcar como atendida.');
+        return; // Bloquear acción
+      }
+
       try {
         const res = await fetch(`http://localhost:3000/api/cita/${idCita}/atendida`, {
           method: 'PUT'
@@ -201,6 +235,14 @@
         console.error('Error al marcar como atendida:', error);
       }
     }
+
+    // Quitar borde rojo al escribir
+    document.getElementById('input-diagnostico').addEventListener('input', () => {
+      document.getElementById('input-diagnostico').classList.remove('campo-vacio');
+    });
+    document.getElementById('input-tratamiento').addEventListener('input', () => {
+      document.getElementById('input-tratamiento').classList.remove('campo-vacio');
+    });
 
     document.addEventListener('DOMContentLoaded', cargarCitas);
   </script>

@@ -5,7 +5,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -14,8 +14,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 const dbConfig = {
   host: 'localhost',
   user: 'root',           // Cambia si tu usuario es distinto
-  password: '123456789',  // Cambia por tu contraseña de MySQL
-  database: 'gestion_mascotas',
+  password: 'angelito002',  // Cambia por tu contraseña de MySQL
+  database: 'gestion_mascota',
 };
 
 // ===================================
@@ -185,7 +185,7 @@ app.post('/api/citas', async (req, res) => {
     await conn.execute(
       `INSERT INTO cita_medica (Fecha, Hora, Motivo, Diagnostico, Tratamiento, ID_Mascota, ID_Veterinario)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [fecha, hora, motivo, diagnostico || 'Pendiente', tratamiento || 'Pendiente', idMascota, idVeterinario]
+      [fecha, hora, motivo, diagnostico || '', tratamiento || '', idMascota, idVeterinario]
     );
 
     await conn.end();

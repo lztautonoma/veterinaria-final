@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `gestion_mascotas` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `gestion_mascotas`;
 -- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestion_mascotas
@@ -65,6 +63,7 @@ CREATE TABLE `cita_medica` (
   `Tratamiento` text,
   `ID_Mascota` int NOT NULL,
   `ID_Veterinario` int NOT NULL,
+  `Atendida` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID_Cita`),
   KEY `ID_Mascota` (`ID_Mascota`),
   KEY `ID_Veterinario` (`ID_Veterinario`),
@@ -79,7 +78,7 @@ CREATE TABLE `cita_medica` (
 
 LOCK TABLES `cita_medica` WRITE;
 /*!40000 ALTER TABLE `cita_medica` DISABLE KEYS */;
-INSERT INTO `cita_medica` VALUES (1,'2025-07-01','10:00:00','Chequeo general','En buena salud','Ninguno',1,1),(2,'2025-07-02','14:00:00','Vacuna anual','Sin novedades','Aplicación de vacuna',2,2),(10,'2025-07-11','13:30:00','no come','Pendiente','Pendiente',7,1);
+INSERT INTO `cita_medica` VALUES (1,'2025-07-01','10:00:00','Chequeo general','En buena salud','vever agua',1,1,1),(2,'2025-07-02','14:00:00','Vacuna anual','Sin novedades','Aplicación de vacuna',2,2,1);
 /*!40000 ALTER TABLE `cita_medica` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,7 +100,7 @@ CREATE TABLE `dueno` (
   `contrasena` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID_Dueno`),
   UNIQUE KEY `DNI` (`DNI`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -110,7 +109,7 @@ CREATE TABLE `dueno` (
 
 LOCK TABLES `dueno` WRITE;
 /*!40000 ALTER TABLE `dueno` DISABLE KEYS */;
-INSERT INTO `dueno` VALUES (1,'Carlos','Ramírez','12345678','Av. Perú 123','987654321','carlos@mail.com',NULL),(2,'Ana','Torres','87654321','Calle Lima 456','912345678','ana@mail.com',NULL),(3,'Angel','Farfan','34567891','Av. Perú 123','999999999','farfan@mail.com',NULL),(4,'Pablo','Chirri','98754321','Calle Lima 456','912345678','pablo@mail.com',NULL),(5,'Brandy','Fernandez','13254687','Calle Lima 458','900223345','brandy@mail.com',NULL),(6,'andres','veliz','74563559','mzf1lt10','948171514','siento7v1@gmail.com','$2b$10$PvuinjaxAWzPsd/PTj77/O5h9A18sm776YBMY4.FSA4.CymXqKoFu'),(7,'angel','farfan','745635595','mzg1lt','902749317','xt6342@rimac.com.pe','$2b$10$BUjp2d58nIRT/kByLaJS4.E7S8yN.P5M3DxuFnzTa6T2d/UKsjkjK');
+INSERT INTO `dueno` VALUES (1,'Carlos','Ramírez','12345678','Av. Perú 123','987654321','carlos@mail.com',NULL),(2,'Ana','Torres','87654321','Calle Lima 456','912345678','ana@mail.com',NULL),(3,'Angel','Farfan','34567891','Av. Perú 123','999999999','farfan@mail.com',NULL),(4,'Pablo','Chirri','98754321','Calle Lima 456','912345678','pablo@mail.com',NULL),(5,'Brandy','Fernandez','13254687','Calle Lima 458','900223345','brandy@mail.com',NULL),(6,'andres','veliz','74563559','mzf1lt10','948171514','siento7v1@gmail.com','$2b$10$PvuinjaxAWzPsd/PTj77/O5h9A18sm776YBMY4.FSA4.CymXqKoFu'),(7,'angel','farfan','745635595','mzg1lt','902749317','xt6342@rimac.com.pe','$2b$10$BUjp2d58nIRT/kByLaJS4.E7S8yN.P5M3DxuFnzTa6T2d/UKsjkjK'),(8,'afwawf','awfsw','75581','mzf1lt','91751815','awffwf@rimac.com.pe','$2b$10$Tv9hyQevLQawQm9KkeqHkuIAmwivP57QUqRpKB7nrK8wCRgdSuXui'),(9,'angel','farfan','41968148919','mzmcmswm','6515616516','farfanangiz10@autonoma.edu.pe','$2b$10$3Oh5bP/s/5Ep7cBumk8b5.fO61F/kWaeie6kKu/ScGglBORstIAjG');
 /*!40000 ALTER TABLE `dueno` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +134,7 @@ CREATE TABLE `mascota` (
   PRIMARY KEY (`ID_Mascota`),
   KEY `ID_Dueno` (`ID_Dueno`),
   CONSTRAINT `mascota_ibfk_1` FOREIGN KEY (`ID_Dueno`) REFERENCES `dueno` (`ID_Dueno`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +143,7 @@ CREATE TABLE `mascota` (
 
 LOCK TABLES `mascota` WRITE;
 /*!40000 ALTER TABLE `mascota` DISABLE KEYS */;
-INSERT INTO `mascota` VALUES (1,'Firulais','Perro','Labrador',5,'Macho','2019-03-15','Saludable',NULL,1),(2,'Mishita','Gato','Siames',3,'Hembra','2021-01-20','Alergia leve',NULL,2),(3,'Pepe','Loro','Pico Rojo',3,'Macho','2025-03-10','Saludable',NULL,3),(4,'Lia','Conejo','Minilop',5,'Hembra','2021-01-20','Alergia leve',NULL,4),(5,'Terry','Perro','Pitbull',3,'Macho','2021-01-21','Saludable',NULL,5),(6,'pepe','perro','chusco',2,'Macho','2025-06-11','good',NULL,7),(7,'caspa del diablo','gato','mixta',2,'Hembra','2023-11-10','embarazada',NULL,7);
+INSERT INTO `mascota` VALUES (1,'Firulais','Perro','Labrador',5,'Macho','2019-03-15','Saludable',NULL,1),(2,'Mishita','Gato','Siames',3,'Hembra','2021-01-20','Alergia leve',NULL,2),(3,'Pepe','Loro','Pico Rojo',3,'Macho','2025-03-10','Saludable',NULL,3),(4,'Lia','Conejo','Minilop',5,'Hembra','2021-01-20','Alergia leve',NULL,4),(5,'Terry','Perro','Pitbull',3,'Macho','2021-01-21','Saludable',NULL,5),(6,'pepe','perro','chusco',2,'Macho','2025-06-11','good',NULL,7),(7,'caspa del diablo','gato','mixta',2,'Hembra','2023-11-10','embarazada',NULL,7),(8,'CASPA DEL DIABLO','gato','mixta',2,'Hembra','2025-07-22','mrd',NULL,7),(9,'caspa del diablo','gato','mixto',7,'Hembra','2025-08-05','good',NULL,9);
 /*!40000 ALTER TABLE `mascota` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,4 +225,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-10  2:50:50
+-- Dump completed on 2025-07-10  8:52:29

@@ -44,12 +44,15 @@
         const contenedor = document.getElementById('citas-container');
         contenedor.innerHTML = '';
 
-        if (citas.length === 0) {
-          contenedor.innerHTML = '<p>No tienes citas médicas registradas.</p>';
+        // FILTRAR SOLO CITAS NO ATENDIDAS
+        const pendientes = citas.filter(cita => cita.Atendida === 0);
+
+        if (pendientes.length === 0) {
+          contenedor.innerHTML = '<p>No tienes citas pendientes.</p>';
           return;
         }
 
-        citas.forEach(cita => {
+        pendientes.forEach(cita => {
           const div = document.createElement('div');
           div.className = 'cita-card';
           div.innerHTML = `
@@ -57,8 +60,6 @@
             <p><strong>Fecha:</strong> ${cita.Fecha}</p>
             <p><strong>Hora:</strong> ${cita.Hora}</p>
             <p><strong>Motivo:</strong> ${cita.Motivo}</p>
-            <p><strong>Diagnóstico:</strong> ${cita.Diagnostico}</p>
-            <p><strong>Tratamiento:</strong> ${cita.Tratamiento}</p>
             <p><strong>Veterinario:</strong> ${cita.NombreVeterinario} ${cita.ApellidoVeterinario}</p>
             <button class="btn-cancelar" data-id="${cita.ID_Cita}">Cancelar cita</button>
           `;
