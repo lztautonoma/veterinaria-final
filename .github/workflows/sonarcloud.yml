@@ -27,9 +27,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          organization: lztautonoma
-          projectKey: lztautonoma_veterinaria-final
-          token: ${{ secrets.SONAR_TOKEN }}
+      - name: Run SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
+        env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
